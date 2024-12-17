@@ -1,18 +1,21 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
+import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Permet les requêtes cross-origin (nécessaire pour la communication avec un frontend)
 
-pokemon_api = "https://pokeapi.co/api/v2/pokemon"
+# URL de l'API Pokémon
+POKEMON_API = "https://pokeapi.co/api/v2/pokemon"
 
 # Route pour récupérer une liste de Pokémon avec pagination
 @app.route('/api/pokemon', methods=['GET'])
 def get_pokemons():
     offset = int(request.args.get('offset', 0))  # Récupérer l'offset, par défaut 0
     limit = int(request.args.get('limit', 12))   # Limite par défaut 12
-    response = requests.get(f"{pokemon_api}?offset={offset}&limit={limit}")
+
+    response = requests.get(f"{POKEMON_API}?offset={offset}&limit={limit}")
 
     if response.status_code == 200:
         pokemons = response.json()
@@ -20,5 +23,7 @@ def get_pokemons():
     else:
         return jsonify({"error": "Impossible de charger les Pokémon"}), 500
 
+# Point d'entrée principal
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5001))  # Récupère le port défini par l'environnement (pour Render)
+    app.run(host='0.0.0.0', port=port, debug=False)  # Écoute sur toutes les interfaces
