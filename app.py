@@ -10,7 +10,7 @@ CORS(app)  # Permet les requêtes cross-origin (nécessaire pour la communicatio
 POKEMON_API = "https://pokeapi.co/api/v2/pokemon"
 
 # Route pour récupérer une liste de Pokémon avec pagination
-@app.route('/api/pokemon', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_pokemons():
     offset = int(request.args.get('offset', 0))  # Récupérer l'offset, par défaut 0
     limit = int(request.args.get('limit', 12))   # Limite par défaut 12
@@ -25,5 +25,5 @@ def get_pokemons():
 
 # Point d'entrée principal
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5001))  # Récupère le port défini par l'environnement (pour Render)
+    port = int(os.environ.get("PORT", 5000))  # Récupère le port défini par l'environnement (pour Render)
     app.run(host='0.0.0.0', port=port, debug=False)  # Écoute sur toutes les interfaces
